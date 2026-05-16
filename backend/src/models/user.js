@@ -38,9 +38,10 @@ const userSchema = new mongoose.Schema({
     max: 120,
   },
   gender: {
-    type: String,
-    enum: ['Male', 'Female', 'Other']
-  },
+  type: String,
+  enum: ['Male', 'Female', 'Other', ''],
+  default: ''
+},
   skills: {
     type: [String],
     default: ["javascript"]

@@ -29,12 +29,12 @@ userRouter.get('/user/connections' , userAuth , async(req,res)=>{
         }).populate("fromUserId" , "firstName lastName skills photoUrl description age gender")
            .populate("toUserId" , "firstName lastName skills photoUrl description age gender");
 
-        const data=connections.map((row)=>
-            {if(row.fromUserId._id.toString() === loggedInUser._id.toString()){
+        const data = connections.map((row) => {
+            if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
                 return row.toUserId;
-            }   
-            row.fromUserId;
-    });
+            }
+            return row.fromUserId;
+        });
         res.status(200).json({data});
     } catch (error) {
         console.error('Error fetching user connections:', error);
@@ -53,29 +53,10 @@ userRouter.get('/feed', userAuth, async (req, res) => {
 
         const skip = (page - 1) * limit;
 
-        const connectionRequests = await ConnectionRequest.find({
-            $or: [
-                { fromUserId: loggedInUser._id },
-                { toUserId: loggedInUser._id }
-            ]
-        })
-        .select("fromUserId toUserId")
-        .populate("fromUserId", "firstName lastName")
-        .populate("toUserId", "firstName lastName");
-
-        const hideUserfromFeed = new Set();
-
-        connectionRequests.forEach((req) => {
-            hideUserfromFeed.add(req.fromUserId._id.toString());
-            hideUserfromFeed.add(req.toUserId._id.toString());
-        });
-
         const user = await User.find({
-            $and: [
-                { _id: { $nin: Array.from(hideUserfromFeed) } },
-                { _id: { $ne: loggedInUser._id } }
-            ]
+            _id: { $ne: loggedInUser._id }
         })
+        .select("firstName lastName age gender description skills photoUrl")
         .skip(skip)
         .limit(limit);
 

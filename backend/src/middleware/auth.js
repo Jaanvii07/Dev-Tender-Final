@@ -9,11 +9,7 @@ const userAuth=async(req,res,next)=>{
             return res.status(401).send("Please login");
         }
 
-        if(!token || !token.token){
-            return res.status(401).send("Unauthorized");
-        }
-
-        const decoded=jwt.verify(token.token,"secretKey");
+        const decoded=jwt.verify(token,"secretKey");
         const {_id}=decoded;
         const user=await User.findById(_id);
         if(!user){

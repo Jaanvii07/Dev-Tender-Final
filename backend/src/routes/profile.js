@@ -22,6 +22,12 @@ profileRouter.patch('/profile/edit' , userAuth , async(req,res)=>{
          }
 
          const loggedInUser = req.user;
+         
+         // Handle skills conversion from string to array
+         if(req.body.skills){
+             req.body.skills = req.body.skills.split(',').map(skill => skill.trim());
+         }
+         
          Object.keys(req.body).forEach((field)=>{
              loggedInUser[field] = req.body[field];
          });

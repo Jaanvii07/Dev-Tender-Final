@@ -7,6 +7,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './utils/AppStore'
+import Connections from './Connections'
+import Requests from './Requests'
 
 function App() {
 
@@ -18,7 +20,9 @@ function App() {
             <Route path="/" element={<Body/>} >
               <Route path="/" element={<Feed/>}></Route>
               <Route path="/login" element={<Login/>}></Route>
-              <Route path="/profil" element={<Profil/>}></Route>
+              <Route path="/profile" element={<Profil/>}></Route>
+              <Route path="/connections" element={<Connections/>}></Route>
+              <Route path="/requests" element={<Requests/>}></Route>
              </Route>
         </Routes>
        </BrowserRouter>

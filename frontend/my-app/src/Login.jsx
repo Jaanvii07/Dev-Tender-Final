@@ -15,6 +15,8 @@ const Login = () => {
     password: ''
   });
 
+  const [error, setError] = React.useState('');
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -39,6 +41,7 @@ const Login = () => {
 
   } catch (error) {
     console.log(error);
+    setError(error.response?.data?.message || "An error occurred");
   }
 };
 
@@ -100,7 +103,7 @@ const Login = () => {
       </div>
 
       <div className="mt-4 text-left">
-      
+         <p className="text-red-500">{error}</p>
       </div>
 
       <button

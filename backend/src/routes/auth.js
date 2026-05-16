@@ -43,7 +43,7 @@ authRouter.post('/login' , async(req,res)=>{
            const token= await user.getJWT();
            res.cookie("token", token, { httpOnly: true });
 
-          res.send("Login successful");
+          res.send(user);
         }
         else{
             res.status(404).send("Invalid email or password");

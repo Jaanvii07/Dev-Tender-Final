@@ -53,8 +53,24 @@ userRouter.get('/feed', userAuth, async (req, res) => {
 
         const skip = (page - 1) * limit;
 
+        // Find all connection requests (sent or received)
+        const connectionRequests = await ConnectionRequest.find({
+            $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }]
+        }).select("fromUserId toUserId");
+
+        const hiddenUsersFromFeed = new Set();
+        connectionRequests.forEach((req) => {
+            hiddenUsersFromFeed.add(req.fromUserId.toString());
+            hiddenUsersFromFeed.add(req.toUserId.toString());
+        });
+
+        const hiddenUsersArray = Array.from(hiddenUsersFromFeed);
+
         const user = await User.find({
-            _id: { $ne: loggedInUser._id }
+            $and: [
+                { _id: { $nin: hiddenUsersArray } },
+                { _id: { $ne: loggedInUser._id } }
+            ]
         })
         .select("firstName lastName age gender description skills photoUrl")
         .skip(skip)

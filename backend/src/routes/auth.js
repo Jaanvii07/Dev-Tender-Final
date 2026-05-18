@@ -26,7 +26,10 @@ authRouter.post('/signup' , async(req,res)=>{
     }
     catch(error){
         console.error('Error creating user:', error);
-        res.status(500).send("Error creating user");
+        if (error.code === 11000) {
+            return res.status(400).json({ message: "Email is already in use" });
+        }
+        res.status(400).json({ message: error.message || "Error creating user" });
     }
 });
 

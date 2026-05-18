@@ -77,7 +77,7 @@ reqestRouter.post('/request/review/:status/:requestId'  , userAuth , async(req,r
         const loggedInUser=req.user;
         const { requestId } = req.params; 
         const status=req.params.status;
-         const allowedStatus=["accepted" , "rejected"];
+        const allowedStatus=["accepted" , "rejected", "ignore"];
         if(!allowedStatus.includes(status)){
             return res.status(400).json({message:"Invalid status type"});
         }
@@ -96,7 +96,7 @@ reqestRouter.post('/request/review/:status/:requestId'  , userAuth , async(req,r
 
         connectionRequest.status = status;
         await connectionRequest.save();
-         res.status(200).json({message:`Connection request ${status} successfully`});
+        res.status(200).json({message:`Connection request ${status} successfully`});
     } catch (error) {
          console.log(error);
          res.status(500).json({message:"Internal server error"});

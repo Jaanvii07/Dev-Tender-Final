@@ -4,8 +4,13 @@ const cookieParser = require('cookie-parser');
 const app= express();
 const cors = require('cors');
 
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: allowedOrigins,
     credentials: true
 }));
 
@@ -25,8 +30,9 @@ connectDB()
   .then(() => {
     console.log('Connected to MongoDB');
 
-    app.listen(3000, () => {
-      console.log('Server is running on port 3000');
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
   })
   .catch((error) => {

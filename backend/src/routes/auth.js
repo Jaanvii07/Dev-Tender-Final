@@ -44,7 +44,11 @@ authRouter.post('/login' , async(req,res)=>{
         const isMatch= await user.validatePassword(password);
         if(isMatch){
            const token= await user.getJWT();
-           res.cookie("token", token, { httpOnly: true });
+           res.cookie("token", token, { 
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+           });
 
           res.send(user);
         }
@@ -59,7 +63,12 @@ authRouter.post('/login' , async(req,res)=>{
 
 authRouter.post('/logout' , async(req,res)=>{
     try{
-        res.cookie("token" , null , {httpOnly:true , expires: new Date(0)});
+        res.cookie("token" , null , {
+            httpOnly: true, 
+            secure: true, 
+            sameSite: "none", 
+            expires: new Date(0)
+        });
         res.send("Logout successful");
     }
     catch(error){
